@@ -1,15 +1,17 @@
-import { ChangeEventHandler, useState } from "react";
+import React, { ChangeEventHandler, useState } from "react";
 import Input from "../../components/Input";
 import { useAuth } from "../../hooks/useAuth";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { FaArrowCircleRight, FaArrowRight } from "react-icons/fa";
+import { useError } from "../../hooks/useError";
 
 interface Props {}
 
 function LoginWithUsername(props: Props) {
   const [isLoading, setIsLoading] = useState(false);
   const { loginWithUsername } = useAuth();
+  const [setError, ErrorComponent] = useError({});
 
   const {} = props;
 
@@ -22,7 +24,6 @@ function LoginWithUsername(props: Props) {
         <h1 className="text-center text-xl font-medium text-[#555] ">
           Login, to Connect the world!
         </h1>
-
         <form
           className="flex flex-col justify-center items-stretch "
           onSubmit={async (e) => {
@@ -31,18 +32,22 @@ function LoginWithUsername(props: Props) {
             setIsLoading(true);
             const username = (e.target as HTMLFormElement).username.value;
             const password = (e.target as HTMLFormElement).password.value;
-            console.log(username, password);
             try {
               const result = await loginWithUsername({ username, password });
-              console.log(result);
             } catch (error) {
-              // !LATER: add functionality that will preview the reason for the error
-              console.log(error.response.data.message);
+              const status:number|undefined = error?.response?.status
+              if(status === 401 || status === 404){
+                setError("invalidcredentials");
+              }else if( status === 500){  
+                setError("internalerror");
+              }else{
+                setError("networkerror");
+              }
             } finally {
               setIsLoading(false);
             }
           }}
-        >
+          >
           <h1 className="mt-8 text-center text-xl font-semibold text-[#555] ">
             Login with Username
           </h1>
@@ -54,7 +59,7 @@ function LoginWithUsername(props: Props) {
               containerClassName: "mt-1",
               inputAutofocus: true,
             }}
-          />
+            />
           <Input
             options={{
               inputName: "password",
@@ -62,18 +67,18 @@ function LoginWithUsername(props: Props) {
               inputType: "password",
               containerClassName: "mt-2",
             }}
-          />
+            />
           <div className="flex justify-between px-8 mt-1">
             <Link
               to="/login/email"
               className="flex items-center font-semibold underline text-[#555] hover:text-[#111] "
-            >
+              >
               Login using Email 
             </Link>
             <Link
               to="/login/forgot-password"
               className="flex items-center font-semibold underline text-[#555] hover:text-[#111] "
-            >
+              >
               Forgot Password? 
             </Link>
           </div>
@@ -85,13 +90,14 @@ function LoginWithUsername(props: Props) {
                 (isLoading
                   ? "cursor-not-allowed bg-gray-400"
                   : "bg-gray-100 hover:bg-gray-300 focus:border-b-4 transition-all hover:border-b-4 focus:-translate-y-1 hover:-translate-y-1 ")
-              }
-              disabled={isLoading}
-            >
+                }
+                disabled={isLoading}
+                >
               {isLoading ? "Logging in..." : "Login"}
             </button>
           </div>
         </form>
+      {ErrorComponent}
       </div>
     </div>
   );

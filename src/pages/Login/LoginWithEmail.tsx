@@ -4,12 +4,15 @@ import { useAuth } from "../../hooks/useAuth";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { FaArrowCircleRight, FaArrowRight } from "react-icons/fa";
+import { useError } from "../../hooks/useError";
 
 interface Props {}
 
 function LoginWithEmail(props: Props) {
   const [isLoading, setIsLoading] = useState(false);
   const { loginWithEmail } = useAuth();
+  const [setError, ErrorComponent] = useError({});
+
 
   const {} = props;
 
@@ -31,12 +34,17 @@ function LoginWithEmail(props: Props) {
             setIsLoading(true);
             const email = (e.target as HTMLFormElement).email.value;
             const password = (e.target as HTMLFormElement).password.value;
-            console.log(email, password);
             try {
               const result = await loginWithEmail({ email, password });
             } catch (error) {
-              // !LATER: add functionality that will preview the reason for the error
-              console.log(error.response.data.message);
+                const status:number|undefined = error?.response?.status
+                if(status === 401 || status === 404){
+                  setError("invalidcredentials", "Invalid email or password. Please check your credentials.");
+                }else if( status === 500){  
+                  setError("internalerror");
+                }else{
+                  setError("networkerror");
+                }
             } finally {
               setIsLoading(false);
             }
@@ -91,6 +99,7 @@ function LoginWithEmail(props: Props) {
             </button>
           </div>
         </form>
+        {ErrorComponent}
       </div>
     </div>
   );
