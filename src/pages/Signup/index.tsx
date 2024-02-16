@@ -1,20 +1,25 @@
-import { ChangeEventHandler, FormEvent, useEffect, useState } from "react";
-import { useError } from "../../hooks/useError";
+import { FormEvent, useEffect, useState } from "react";
 import SignupInputsContainer from "./IndexComponents/SignupInputsContainer";
 import SignupLinks from "./IndexComponents/SignupLinks";
 import SingupSubmitButton from "./IndexComponents/SingupSubmitButton";
 import { useAuth } from "../../hooks/useAuth";
 import { useToast } from "@/shadcn-ui-components/ui/use-toast";
-import { ToastAction } from "@/shadcn-ui-components/ui/toast";
+import { useNavigate } from "react-router-dom";
 
 interface Props {}
 
 function Signup(props: Props) {
-    const { signup } = useAuth();
+    const { signup, user } = useAuth();
     const [isLoading, setIsLoading] = useState(false);
-    const [setError, ErrorComponent] = useError({});
     const [isInputsValid, setIsInputsValid] = useState(false);
+    const navigate = useNavigate();
     const { toast } = useToast();
+
+    useEffect(()=>{
+        if(user){
+          navigate("/profile", {replace: true});
+        }
+      }, [user])
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
@@ -28,8 +33,8 @@ function Signup(props: Props) {
         const phone = target.phone.value;
         try {
             setIsLoading(true);
-            if(!isInputsValid){
-                return ;
+            if (!isInputsValid) {
+                return;
             }
             const result = await signup({
                 name: first_name + " " + last_name,
@@ -41,20 +46,19 @@ function Signup(props: Props) {
         } catch (error) {
             let errorString = error?.response?.data?.message;
             if (errorString) {
-                console.log(errorString)
+                console.log(errorString);
                 toast({
                     variant: "destructive",
                     title: "invalid credentials",
                     description: errorString,
-                    
-                  })
-            }else {
+                });
+            } else {
                 toast({
                     variant: "destructive",
                     title: "Weak Internet Connection",
-                    description: "Please check your internet connection and try again.",
-                    
-                })
+                    description:
+                        "Please check your internet connection and try again.",
+                });
             }
         } finally {
             setIsLoading(false);
@@ -82,7 +86,6 @@ function Signup(props: Props) {
                         <SignupLinks />
                         <SingupSubmitButton isLoading={isLoading} />
                     </form>
-                    {ErrorComponent}
                 </div>
             </div>
         </div>

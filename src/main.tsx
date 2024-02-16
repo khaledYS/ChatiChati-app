@@ -7,10 +7,8 @@ import { BrowserRouter } from 'react-router-dom';
 import { Toaster } from './shadcn-ui-components/ui/toaster';
 const Root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement );
 Root.render(
-    <StrictMode>
         <BrowserRouter>
       <Toaster />
             <App /> 
         </BrowserRouter>
-    </StrictMode>
 );

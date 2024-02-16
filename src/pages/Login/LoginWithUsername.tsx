@@ -1,9 +1,7 @@
 import React, { ChangeEventHandler, useState } from "react";
 import Input from "../../components/Input";
 import { useAuth } from "../../hooks/useAuth";
-import axios from "axios";
 import { Link } from "react-router-dom";
-import { FaArrowCircleRight, FaArrowRight } from "react-icons/fa";
 import { useError } from "../../hooks/useError";
 
 interface Props {}
