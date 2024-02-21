@@ -4,6 +4,7 @@ import { Textarea } from "@/shadcn-ui-components/ui/textarea";
 import { Button } from "@/shadcn-ui-components/ui/button";
 import axios from "axios";
 import { ScrollArea } from "@/shadcn-ui-components/ui/scroll-area";
+import { Input } from "@/shadcn-ui-components/ui/input";
 
 interface Props {}
 
@@ -41,7 +42,7 @@ function ShowChat(props: Props) {
     };
     return (
         <div className="flex flex-col h-full p-2">
-            <ScrollArea color="blue" className="max-h-[80%] h-full messages overflow-y-auto">
+            <ScrollArea color="blue" className="h-full messages overflow-y-auto">
                 {messages.map((message, index) => (
                     <div
                         key={index}
@@ -63,9 +64,9 @@ function ShowChat(props: Props) {
                     </div>
                 ))}
             </ScrollArea>
-            <form className="max-h-[20%] h-full grid w-full gap-2" onSubmit={handleSubmit}>
-                <Textarea id="message" placeholder="Type your message here." />
-                <Button>Send message</Button>
+            <form className="w-full gap-2 flex items-stretch" onSubmit={handleSubmit}>
+                <Input id="message" placeholder="Type your message here." className="!border-2 !border-gray-900 border-solid appearance-none text-lg font-semibold font-sans" style={{"boxShadow": "rgb(51, 51, 51) 0px 0px 3px -1px inset, rgb(51, 51, 51) 0px 0px 17px -6px"}} />
+                <Button className="h-full">Send message</Button>
             </form>
         </div>
     );

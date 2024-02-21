@@ -12,7 +12,7 @@ interface Props {}
 
 function App(props: Props) {
     return (
-        <div className=" theme-bg w-full h-full grid place-items-center">
+        <div className=" theme-bg w-full h-full grid place-items-center ">
             <AuthProvider userData={null}>
                 <Routes>
                     <Route path="/" Component={Home} />

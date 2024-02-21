@@ -6,8 +6,8 @@ import {
     ResizablePanel,
     ResizablePanelGroup,
 } from "@/shadcn-ui-components/ui/resizable";
-import ChatProfiles from "./ChatProfiles";
-import ShowChat from "./ShowChat";
+import ChatProfiles from "./ChatProfiles/index";
+import ShowChat from "./ShowChat/index";
 
 interface Props {}
 
@@ -16,7 +16,7 @@ function Index(props: Props) {
 
     return (
         <PrivateRoute>
-            <div className="flex flex-col h-full max-w-[1000px] max-h-[700px] mx-auto w-full bg-[#f0f0f0] px-2 rounded-2xl">
+            <div className="flex flex-col h-full max-w-[1000px] max-h-[700px] mx-auto w-full bg-[#fff] overflow-hidden rounded-2xl">
                 <ResizablePanelGroup direction="horizontal" >
                     <ResizablePanel defaultSize={30}>
                         <ChatProfiles />
